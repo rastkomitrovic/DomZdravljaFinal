@@ -1,0 +1,2 @@
+Broj porta=10001
+IP adresa servera=127.0.0.1

@@ -1,0 +1,454 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package form.pregled;
+
+
+import controler.Controller;
+import domain.Pregled;
+import domain.VrstaSpecijaliste;
+import javax.swing.JOptionPane;
+import sesion.Session;
+import form.FormMode;
+import java.net.SocketException;
+
+import thread.ThreadClock;
+
+/**
+ *
+ * @author Rastko
+ */
+public class FormPregled extends javax.swing.JDialog {
+
+    private Pregled pregledSaForme;
+    private Thread thc;
+    public FormPregled(java.awt.Frame parent, boolean modal, FormMode mode) {
+        this(parent, modal);
+        changeMode(mode);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    }
+
+    public FormPregled(java.awt.Frame parent, boolean modal, FormMode mode, Pregled pregled) {
+        this(parent, modal,mode);
+        pregledSaForme = pregled;
+        populatePregled();
+
+    }
+
+    public FormPregled(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        populateAll();
+        setLocationRelativeTo(null);
+        txtID.setEditable(false);
+        thc=new ThreadClock(txtClock);
+        thc.start();
+    }
+
+    public void populatePregled() {
+        txtID.setText(String.valueOf(pregledSaForme.getpregledId()));
+        txtNazivPregleda.setText(pregledSaForme.getnazivPregleda());
+        txtOpis.setText(pregledSaForme.getOpis());
+        lblVrsta.setText(pregledSaForme.getVrstaSpecijalisteZaPregled().getNazivVrste());
+    }
+
+    public void populateAll() {
+        // populateComboBoxDoktor();
+        populateComboBoxVrstaSpecijalisteZaPregled();
+        populateCurrentUser();
+    }
+
+    public void endProgram(){
+        JOptionPane.showMessageDialog(rootPane, "Server vam je prekinuo konekciju");
+        this.dispose();      
+        System.exit(0);
+
+    }
+    public void populateCurrentUser() {
+        lblKorisnik.setText("Trenutni korisnik:" + Session.getCurrentUser().getFirstName() + " " + Session.getCurrentUser().getLastName());
+    }
+
+    public void populateComboBoxVrstaSpecijalisteZaPregled() {
+        cmbVrstaSpecijalisteZaPregled.removeAllItems();
+        try {
+            for (VrstaSpecijaliste vr : Controller.getInstance().getAllVrstaSpecijaliste()) {
+                cmbVrstaSpecijalisteZaPregled.addItem(vr);
+            }
+        } catch (Exception e) {
+            if(e instanceof SocketException)
+                endProgram();
+            System.out.println("Greska u FormPregled.populateComboBoxVrstaSpecijalisteZaPregled");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+
+        }
+
+    }
+
+    public void changeMode(FormMode mode) {
+        switch (mode) {
+            case View:
+                btnIzbrisi.setVisible(true);
+                btnIzmeni.setVisible(false);
+                btnSacuvaj.setVisible(false);
+                btnCancel.setVisible(true);
+                btnAzuriraj.setVisible(true);
+                txtID.setEditable(false);
+                txtNazivPregleda.setEditable(false);
+                txtOpis.setEditable(false);
+                cmbVrstaSpecijalisteZaPregled.setEnabled(false);
+                break;
+            case Edit:
+                btnAzuriraj.setVisible(false);
+                btnIzbrisi.setVisible(false);
+                btnSacuvaj.setVisible(false);
+                btnCancel.setVisible(true);
+                btnIzmeni.setVisible(true);
+                txtID.setEditable(false);
+                txtNazivPregleda.setEditable(true);
+                txtOpis.setEditable(true);
+                cmbVrstaSpecijalisteZaPregled.setEnabled(true);
+                break;
+            case Create:
+                btnAzuriraj.setVisible(false);
+                btnIzbrisi.setVisible(false);
+                btnIzmeni.setVisible(false);
+                btnCancel.setVisible(true);
+                btnSacuvaj.setVisible(true);
+                lblID.setVisible(false);
+                txtID.setVisible(false);
+                txtNazivPregleda.setEditable(true);
+                txtOpis.setEditable(true);
+                cmbVrstaSpecijalisteZaPregled.setEnabled(true);
+                break;
+            case Delete:
+                btnAzuriraj.setVisible(true);
+                btnIzmeni.setVisible(false);
+                btnSacuvaj.setVisible(false);
+                btnCancel.setVisible(true);
+                btnIzbrisi.setVisible(true);
+                txtID.setEditable(false);
+                txtNazivPregleda.setEditable(false);
+                txtOpis.setEditable(false);
+                cmbVrstaSpecijalisteZaPregled.setEnabled(false);
+                break;
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        lblKorisnik = new javax.swing.JLabel();
+        txtClock = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        lblID = new javax.swing.JLabel();
+        lblNazivPregleda = new javax.swing.JLabel();
+        lblOpis = new javax.swing.JLabel();
+        txtID = new javax.swing.JTextField();
+        txtNazivPregleda = new javax.swing.JTextField();
+        lblVrstaSpecijalisteZaPregled = new javax.swing.JLabel();
+        cmbVrstaSpecijalisteZaPregled = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtOpis = new javax.swing.JTextArea();
+        lblVrsta = new javax.swing.JLabel();
+        btnIzbrisi = new javax.swing.JButton();
+        btnIzmeni = new javax.swing.JButton();
+        btnSacuvaj = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnAzuriraj = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Korisnik"));
+
+        lblKorisnik.setText("Trenutni korisnik:");
+
+        txtClock.setText("jLabel1");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblKorisnik)
+                    .addComponent(txtClock))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(lblKorisnik)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtClock))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Pregled"));
+
+        lblID.setText("ID:");
+
+        lblNazivPregleda.setText("Naziv pregleda");
+
+        lblOpis.setText("Opis:");
+
+        lblVrstaSpecijalisteZaPregled.setText("Vrsta specijaliste za pregled:");
+
+        cmbVrstaSpecijalisteZaPregled.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        txtOpis.setColumns(20);
+        txtOpis.setRows(5);
+        jScrollPane1.setViewportView(txtOpis);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtID))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lblNazivPregleda)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNazivPregleda, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(lblOpis)
+                        .addGap(97, 97, 97))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lblVrstaSpecijalisteZaPregled)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbVrstaSpecijalisteZaPregled, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblVrsta)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblID)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNazivPregleda)
+                    .addComponent(txtNazivPregleda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVrstaSpecijalisteZaPregled)
+                    .addComponent(cmbVrstaSpecijalisteZaPregled, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVrsta))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblOpis)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnIzbrisi.setText("Izbrisi");
+        btnIzbrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzbrisiActionPerformed(evt);
+            }
+        });
+
+        btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
+
+        btnSacuvaj.setText("Sacuvaj");
+        btnSacuvaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSacuvajActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+
+        btnAzuriraj.setText("Azuriraj");
+        btnAzuriraj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAzurirajActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSacuvaj)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAzuriraj)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnIzmeni)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnIzbrisi)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancel)
+                    .addComponent(btnSacuvaj)
+                    .addComponent(btnIzmeni)
+                    .addComponent(btnIzbrisi)
+                    .addComponent(btnAzuriraj))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        thc.interrupt();
+        this.dispose();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+        try {
+            String nazivPregleda = txtNazivPregleda.getText().trim();
+            String opis = txtOpis.getText().trim();
+            VrstaSpecijaliste vrsta = (VrstaSpecijaliste) cmbVrstaSpecijalisteZaPregled.getSelectedItem();
+            if (nazivPregleda == null || nazivPregleda.equals("")) {
+                throw new Exception("Pogresno uneti podaci");
+            }
+                if (Controller.getInstance().addPregled(nazivPregleda, opis, vrsta) == true) {
+                    JOptionPane.showMessageDialog(this, "Uspesno unet pregled");
+                    txtNazivPregleda.setText("");
+                    txtOpis.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Neuspesno unet pregled");
+                }
+            
+        } catch (Exception e) {
+            if(e instanceof SocketException)
+                endProgram();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            System.out.println("Greska u FormPregled.Sacuvaj");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnSacuvajActionPerformed
+
+    private void btnAzurirajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAzurirajActionPerformed
+        changeMode(FormMode.Edit);
+    }//GEN-LAST:event_btnAzurirajActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        long pregledId = Long.parseLong(txtID.getText().trim());
+        String nazivPregleda = txtNazivPregleda.getText().trim();
+        String opis = txtOpis.getText().trim();
+        VrstaSpecijaliste vrstaSpecijaliste = (VrstaSpecijaliste) cmbVrstaSpecijalisteZaPregled.getSelectedItem();
+        Pregled pregled = new Pregled(pregledId, nazivPregleda, opis, vrstaSpecijaliste);
+        if (pregledSaForme.equals(pregled)) {
+            JOptionPane.showMessageDialog(this, "Nisu izmenjeni podaci o pregledu, izmenite ih pa pritisnite dugme izmeni");
+        } else {
+            try {
+                if (Controller.getInstance().updatePregled(pregled)) {
+                    JOptionPane.showMessageDialog(this, "Pregled je uspesno izmenjen");
+                    pregledSaForme.setOpis(opis);
+                    pregledSaForme.setnazivPregleda(nazivPregleda);
+                    pregledSaForme.setVrstaSpecijalisteZaPregled(vrstaSpecijaliste);
+                    populatePregled();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pregled nije izmenjen");
+                }
+            } catch (Exception e) {
+                if(e instanceof SocketException)
+                    endProgram();
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            System.out.println("Greska u FormPregled.Izmeni");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            }
+        }
+
+    }//GEN-LAST:event_btnIzmeniActionPerformed
+
+    private void btnIzbrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzbrisiActionPerformed
+        int k = JOptionPane.showConfirmDialog(this, "Da li ste sigurni da zelite da obrisete izabrani pregled", "Brisanje pregleda", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (k == 0) {
+            try {
+                if (Controller.getInstance().obrisiPregled(pregledSaForme)) {
+                    JOptionPane.showMessageDialog(this, "Pregled uspesno izbrisan");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pregled nije izbrisan");
+                }
+            } catch (Exception e) {
+                if(e instanceof SocketException)
+                    endProgram();
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            System.out.println("Greska u FormPregled.izbrisi");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            }
+        }
+        if (k == 2) {
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnIzbrisiActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAzuriraj;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnIzbrisi;
+    private javax.swing.JButton btnIzmeni;
+    private javax.swing.JButton btnSacuvaj;
+    private javax.swing.JComboBox<Object> cmbVrstaSpecijalisteZaPregled;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblID;
+    private javax.swing.JLabel lblKorisnik;
+    private javax.swing.JLabel lblNazivPregleda;
+    private javax.swing.JLabel lblOpis;
+    private javax.swing.JLabel lblVrsta;
+    private javax.swing.JLabel lblVrstaSpecijalisteZaPregled;
+    private javax.swing.JLabel txtClock;
+    private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtNazivPregleda;
+    private javax.swing.JTextArea txtOpis;
+    // End of variables declaration//GEN-END:variables
+}
